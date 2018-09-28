@@ -59,13 +59,6 @@
                     prop="addr">
         <el-input placeholder="请输入活动地址" v-model="dataForm.addr"></el-input>
       </el-form-item>
-      <el-form-item label="活动类型"
-                    prop="activityType">
-        <el-radio-group v-model="dataForm.activityType">
-          <el-radio :label="0">科技服务</el-radio>
-          <el-radio :label="1">招募活动</el-radio>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item label="报名条件"
                     prop="conditions">
         <el-radio-group v-model="dataForm.conditions">
@@ -107,7 +100,6 @@ export default {
       roleList: [],
       dataForm: {
         "activityStatus": 0,
-        "activityType": 0,
         "addr": "",
         "conditions": 0,
         "description": "",
@@ -119,7 +111,8 @@ export default {
         "preacherIdentity": "0",
         "publisher": "",
         "startTime": "",
-        "title": ""
+        "title": "",
+        "publicize_img_url":"",
       },
       dataRule: {
       }
