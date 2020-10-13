@@ -8,22 +8,44 @@
                @search-change="searchChange"
                @on-load="getDataList"
                @refresh-change="refreshChange">
+      <template slot-scope="scope"
+                slot="preacherIdentity">
+        <el-tag v-if="scope.row.preacherIdentity === 0"
+                size="small">普通人员</el-tag>
+        <el-tag v-else-if="scope.row.preacherIdentity === 1"
+                size="small">专家</el-tag>
+        <el-tag v-else
+                size="small">教授</el-tag>
+      </template>
 
       <template slot-scope="scope"
-                slot="status">
-        <el-tag v-if="scope.row.status === 0"
-                size="small"
-                type="danger">撤销</el-tag>
+                slot="conditions">
+        <el-tag v-if="scope.row.conditions === 0"
+                size="small">所有人</el-tag>
+        <el-tag v-else-if="scope.row.conditions === 1"
+                size="small">vip会员</el-tag>
         <el-tag v-else
-                size="small">公布</el-tag>
+                size="small">其他</el-tag>
       </template>
+
       <template slot-scope="scope"
-                slot="isTop">
-        <el-tag v-if="scope.row.isTop === 0"
-                size="small">否</el-tag>
+                slot="activityType">
+        <el-tag v-if="scope.row.activityType === 0"
+                size="small">科技服务</el-tag>
         <el-tag v-else
-                size="small">是</el-tag>
+                size="small">招募活动</el-tag>
       </template>
+
+      <template slot-scope="scope"
+                slot="activityStatus">
+        <el-tag v-if="scope.row.activityStatus === 0"
+                size="small">未开始</el-tag>
+        <el-tag v-else-if="scope.row.activityStatus === 1"
+                size="small">进行中</el-tag>
+        <el-tag v-else
+                size="small">结束</el-tag>
+      </template>
+
       <template slot="menuLeft">
 
         <el-button v-if="isAuth('shop:notice:save')"
@@ -84,15 +106,17 @@ export default {
     getDataList (page, params) {
       this.dataListLoading = true
       this.$http({
-        url: this.$http.adornUrl('/shop/notice/page'),
+        url: this.$http.adornUrl('/active/list'),
         method: 'get',
         params: this.$http.adornParams(Object.assign({
           current: page == null ? this.page.currentPage : page.currentPage,
           size: page == null ? this.page.pageSize : page.pageSize
         }, params))
       }).then(({ data }) => {
-        this.dataList = data.records
-        this.page.total = data.total
+        console.log( JSON.stringify( data ) );
+        this.dataList = data.data.records
+        console.log( JSON.stringify( this.dataList ) );
+        this.page.total = data.data.total
         this.dataListLoading = false
       })
     },

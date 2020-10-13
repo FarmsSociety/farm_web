@@ -14,7 +14,7 @@ module.exports = {
     // 代理列表, 是否开启代理通过[./dev.env.js]配置
     proxyTable: devEnv.OPEN_PROXY === false ? {} : {
       '/proxyApi': {
-        target: 'http://119.45.252.247:8085/',
+        target: 'http://localhost:8085/',
         changeOrigin: true,
         pathRewrite: {
           '^/proxyApi': '/'
