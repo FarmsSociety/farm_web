@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import { tableOption } from '@/crud/shop/notice'
-import AddOrUpdate from './active-add-or-update'
+import { tableOption } from '@/crud/active/apply'
+import AddOrUpdate from './apply-add-or-update'
 export default {
   data () {
     return {
@@ -84,7 +84,7 @@ export default {
     getDataList (page, params) {
       this.dataListLoading = true
       this.$http({
-        url: this.$http.adornUrl('/shop/notice/page'),
+        url: this.$http.adornUrl('/science/activity/getSignUpActivityList'),
         method: 'get',
         params: this.$http.adornParams(Object.assign({
           current: page == null ? this.page.currentPage : page.currentPage,
@@ -110,7 +110,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$http({
-          url: this.$http.adornUrl('/shop/notice/' + id),
+          url: this.$http.adornUrl('/science/activity/delete/' + id),
           method: 'delete',
           data: this.$http.adornData({})
         }).then(({ data }) => {

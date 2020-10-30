@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import { tableOption } from '@/crud/shop/notice'
-import AddOrUpdate from './active-add-or-update'
+import { tableOption } from '@/crud/active/commen'
+import AddOrUpdate from './commen-add-or-update'
 export default {
   data () {
     return {
@@ -67,9 +67,9 @@ export default {
       },
       dataListLoading: false,
       tableOption: tableOption,
-      permission: {
-        delBtn: this.isAuth('shop:notice:delete')
-      },
+      // permission: {
+      //   delBtn: this.isAuth('shop:notice:delete')
+      // },
       addOrUpdateVisible: false
     }
   },

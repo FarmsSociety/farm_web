@@ -11,13 +11,43 @@
                     prop="title">
         <el-input placeholder="请输入活动名称" v-model="dataForm.title"></el-input>
       </el-form-item>
-
-
       <el-row>
         <el-col :span="12">
           <el-form-item label="发布者"
                         prop="publisher">
             <el-input placeholder="请输入发布者" v-model="dataForm.publisher"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="主办方"
+                        prop="sponsor">
+            <el-input placeholder="请输入主办方" v-model="dataForm.sponsor"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="宣讲者"
+                        prop="preacher">
+            <el-input placeholder="请输入宣讲者" v-model="dataForm.preacher"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="宣讲身份"
+                        prop="preacherIdentity">
+            <el-select v-model="dataForm.preacherIdentity" placeholder="请选择宣讲者身份">
+              <el-option label="普通人员" value="0"></el-option>
+              <el-option label="专家" value="1"></el-option>
+              <el-option label="教授" value="2"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="联系人"
+                        prop="sponsor">
+            <el-input placeholder="请输入联系人" v-model="dataForm.sponsor"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -29,36 +59,28 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="宣讲者"
-                        prop="preacher">
-            <el-input placeholder="请输入宣讲者" v-model="dataForm.preacher"></el-input>
+          <el-form-item label="开始时间" prop="startTime">
+            <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.startTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
-
         </el-col>
         <el-col :span="12">
-          <el-form-item label="身份"
-                        prop="preacherIdentity">
-            <el-select v-model="dataForm.preacherIdentity" placeholder="请选择宣讲者身份">
-              <el-option label="普通人员" value="0"></el-option>
-              <el-option label="专家" value="1"></el-option>
-              <el-option label="教授" value="2"></el-option>
-            </el-select>
+          <el-form-item label="结束时间" prop="endTime">
+            <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.endTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="起止时间">
-        <el-col :span="11">
-          <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.startTime" style="width: 100%;"></el-date-picker>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="参与人数" prop="peopleNum">
+            <el-input placeholder="请输入参与人数" v-model="dataForm.peopleNum"></el-input>
+          </el-form-item>
         </el-col>
-        <el-col class="line" style="text-align: center;" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.endTime" style="width: 100%;"></el-date-picker>
+        <el-col :span="12">
+          <el-form-item label="活动地址" prop="addr">
+            <el-input placeholder="请输入活动地址" v-model="dataForm.addr"></el-input>
+          </el-form-item>
         </el-col>
-      </el-form-item>
-      <el-form-item label="活动地址"
-                    prop="addr">
-        <el-input placeholder="请输入活动地址" v-model="dataForm.addr"></el-input>
-      </el-form-item>
+      </el-row>
       <el-form-item label="报名条件"
                     prop="conditions">
         <el-radio-group v-model="dataForm.conditions">
@@ -75,9 +97,21 @@
           <el-radio :label="2">结束</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="详情"
+      <el-form-item class="active-image" label="封面图"
+                    prop="iconUrl">
+        <pic-upload v-model="dataForm.iconUrl"></pic-upload>
+      </el-form-item>
+      <el-form-item class="active-image" label="宣传图"
+                    prop="publicizeImgUrl">
+        <pic-upload v-model="dataForm.publicizeImgUrl"></pic-upload>
+      </el-form-item>
+      <el-form-item label="活动介绍"
                     prop="description">
-        <tiny-mce v-model="dataForm.description"></tiny-mce>
+        <el-input placeholder="请输入活动介绍" type="textarea" v-model="dataForm.description"></el-input>
+      </el-form-item>
+      <el-form-item label="详情"
+                    prop="activityDetails">
+        <tiny-mce v-model="dataForm.activityDetails"></tiny-mce>
       </el-form-item>
     </el-form>
     <span slot="footer"
@@ -93,33 +127,40 @@
 
 <script>
 import TinyMce from '@/components/tiny-mce'
+import { treeDataTranslate, idList } from '@/utils'
+import PicUpload from '@/components/pic-upload'
 export default {
   data () {
     return {
       visible: false,
       roleList: [],
       dataForm: {
-        "activityStatus": 0,
+        "activityDetails": "",
+        "activityStatus": '0',
         "addr": "",
-        "conditions": 0,
+        "conditions": '0',
         "description": "",
         "endTime": "",
         "iconUrl": "",
         "id": "",
+        "peopleNum": '0',
+        "personName": "",
         "phone": "",
         "preacher": "",
-        "preacherIdentity": "0",
+        "preacherIdentity": '0',
+        "publicizeImgUrl": "",
         "publisher": "",
+        "sponsor": "",
         "startTime": "",
-        "title": "",
-        "publicize_img_url":"",
+        "title": ""
       },
       dataRule: {
       }
     }
   },
   components: {
-    TinyMce
+    TinyMce,
+    PicUpload
   },
   methods: {
     init (id) {
@@ -146,7 +187,7 @@ export default {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl('/active/publish'),
-            method: this.dataForm.id ? 'put' : 'post',
+            method: this.dataForm.id ? 'PUT' : 'POST',
             data: this.$http.adornData(this.dataForm)
           }).then(({ data }) => {
             this.$message({
@@ -166,3 +207,9 @@ export default {
   }
 }
 </script>
+<style>
+  .active-image .pic-uploader-component .el-upload .pic-uploader-icon, .active-image .pic-uploader-component .el-upload .pic{
+    width: 80px;height: 80px;line-height: 80px;
+  }
+
+</style>
