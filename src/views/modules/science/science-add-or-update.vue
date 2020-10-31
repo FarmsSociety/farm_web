@@ -7,29 +7,85 @@
              ref="dataForm"
              @keyup.enter.native="dataFormSubmit()"
              label-width="80px">
-      <el-form-item label="公告标题"
+      <el-form-item label="服务标题"
                     prop="title">
-        <el-input v-model="dataForm.title"></el-input>
+        <el-input placeholder="请输入服务标题" v-model="dataForm.title"></el-input>
       </el-form-item>
-      <el-form-item label="状态"
-                    prop="status">
-        <el-radio-group v-model="dataForm.status">
-          <el-radio :label="1">公布</el-radio>
-          <el-radio :label="0">撤销</el-radio>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="发布者"
+                        prop="publisher">
+            <el-input placeholder="请输入服务发布者" v-model="dataForm.publisher"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="联系电话"
+                        prop="phone">
+            <el-input placeholder="联系电话" v-model="dataForm.phone"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="宣讲者"
+                        prop="preacher">
+            <el-input placeholder="请输入宣讲者" v-model="dataForm.preacher"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="宣讲身份"
+                        prop="preacherIdentity">
+            <el-select v-model="dataForm.preacherIdentity" placeholder="宣讲身份">
+              <el-option label="普通人员" value="0"></el-option>
+              <el-option label="专家" value="1"></el-option>
+              <el-option label="教授" value="2"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="开始时间" prop="startTime">
+            <el-date-picker type="date" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" v-model="dataForm.startTime" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="结束时间" prop="endTime">
+            <el-date-picker type="date" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" v-model="dataForm.endTime" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-form-item label="活动地址" prop="addr">
+        <el-input placeholder="请输入活动地址" v-model="dataForm.addr"></el-input>
+      </el-form-item>
+      <el-form-item label="报名条件"
+                    prop="conditions">
+        <el-radio-group v-model="dataForm.conditions">
+          <el-radio :label="0">所有人</el-radio>
+          <el-radio :label="1">vip会员</el-radio>
+          <el-radio :label="2">其他</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="置顶"
-                    prop="isTop">
-        <el-radio-group v-model="dataForm.isTop">
-          <el-radio :label="1">是</el-radio>
-          <el-radio :label="0">否</el-radio>
+      <el-form-item label="活动状态"
+                    prop="serviceStatus">
+        <el-radio-group v-model="dataForm.serviceStatus">
+          <el-radio :label="0">未开始</el-radio>
+          <el-radio :label="1">进行中</el-radio>
+          <el-radio :label="2">结束</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="公告内容"
-                    prop="content">
-        <tiny-mce v-model="dataForm.content"></tiny-mce>
+      <el-form-item class="active-image" label="封面图"
+                    prop="iconUrl">
+        <pic-upload v-model="dataForm.iconUrl"></pic-upload>
       </el-form-item>
-
+      <el-form-item class="active-image" label="封面图"
+                    prop="imgUrl">
+        <pic-upload v-model="dataForm.imgUrl"></pic-upload>
+      </el-form-item>
+      <el-form-item label="详情"
+                    prop="description">
+        <tiny-mce v-model="dataForm.description"></tiny-mce>
+      </el-form-item>
     </el-form>
     <span slot="footer"
           class="dialog-footer">
@@ -44,24 +100,36 @@
 
 <script>
 import TinyMce from '@/components/tiny-mce'
+import { treeDataTranslate, idList } from '@/utils'
+import PicUpload from '@/components/pic-upload'
 export default {
   data () {
     return {
       visible: false,
       roleList: [],
       dataForm: {
-        title: null,
-        content: null,
-        url: null,
-        status: 1,
-        isTop: 0
+        "addr": "",
+        "conditions": 0,
+        "description": "",
+        "endTime": "",
+        "iconUrl": "",
+        "id": "",
+        "imgUrl": "",
+        "phone": "",
+        "preacher": "",
+        "preacherIdentity": "0",
+        "publisher": "",
+        "serviceStatus": 0,
+        "startTime": "",
+        "title": ""
       },
       dataRule: {
       }
     }
   },
   components: {
-    TinyMce
+    TinyMce,
+    PicUpload
   },
   methods: {
     init (id) {
@@ -71,22 +139,26 @@ export default {
         this.$refs['dataForm'].resetFields()
         if (this.dataForm.id) {
           this.$http({
-            url: this.$http.adornUrl('/shop/notice/info/' + this.dataForm.id),
+            url: this.$http.adornUrl('/science/service/info?id=' + this.dataForm.id),
             method: 'get',
             params: this.$http.adornParams()
           }).then(({ data }) => {
-            this.dataForm = data
+            this.dataForm = data.data
+            this.dataForm.preacherIdentity = ""+this.dataForm.preacherIdentity;
+            console.log( this.dataForm );
           })
         }
       })
     },
     // 表单提交
     dataFormSubmit () {
+      var url = this.dataForm.id ? "/science/service/update" : "/science/service/add";
+      //时间格式转换
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.$http({
-            url: this.$http.adornUrl('/shop/notice'),
-            method: this.dataForm.id ? 'put' : 'post',
+            url: this.$http.adornUrl(url),
+            method: this.dataForm.id ? 'PUT' : 'POST',
             data: this.$http.adornData(this.dataForm)
           }).then(({ data }) => {
             this.$message({
@@ -106,3 +178,9 @@ export default {
   }
 }
 </script>
+<style>
+  .active-image .pic-uploader-component .el-upload .pic-uploader-icon, .active-image .pic-uploader-component .el-upload .pic{
+    width: 80px;height: 80px;line-height: 80px;
+  }
+
+</style>

@@ -46,8 +46,8 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="联系人"
-                        prop="sponsor">
-            <el-input placeholder="请输入联系人" v-model="dataForm.sponsor"></el-input>
+                        prop="personName">
+            <el-input placeholder="请输入联系人" v-model="dataForm.personName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -60,27 +60,18 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="开始时间" prop="startTime">
-            <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.startTime" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" v-model="dataForm.startTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="结束时间" prop="endTime">
-            <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.endTime" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" v-model="dataForm.endTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="参与人数" prop="peopleNum">
-            <el-input placeholder="请输入参与人数" v-model="dataForm.peopleNum"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="活动地址" prop="addr">
-            <el-input placeholder="请输入活动地址" v-model="dataForm.addr"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="活动地址" prop="addr">
+        <el-input placeholder="请输入活动地址" v-model="dataForm.addr"></el-input>
+      </el-form-item>
       <el-form-item label="报名条件"
                     prop="conditions">
         <el-radio-group v-model="dataForm.conditions">
@@ -136,14 +127,13 @@ export default {
       roleList: [],
       dataForm: {
         "activityDetails": "",
-        "activityStatus": '0',
+        "activityStatus": 0,
         "addr": "",
-        "conditions": '0',
+        "conditions": 0,
         "description": "",
         "endTime": "",
         "iconUrl": "",
         "id": "",
-        "peopleNum": '0',
         "personName": "",
         "phone": "",
         "preacher": "",
@@ -170,7 +160,7 @@ export default {
         this.$refs['dataForm'].resetFields()
         if (this.dataForm.id) {
           this.$http({
-            url: this.$http.adornUrl('/active/info?id=' + this.dataForm.id),
+            url: this.$http.adornUrl('/science/activity/info?id=' + this.dataForm.id),
             method: 'get',
             params: this.$http.adornParams()
           }).then(({ data }) => {
@@ -183,11 +173,12 @@ export default {
     },
     // 表单提交
     dataFormSubmit () {
+      //时间格式转换
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.$http({
-            url: this.$http.adornUrl('/active/publish'),
-            method: this.dataForm.id ? 'PUT' : 'POST',
+            url: this.$http.adornUrl('/science/activity/publish'),
+            method: this.dataForm.id ? 'POST' : 'POST',
             data: this.$http.adornData(this.dataForm)
           }).then(({ data }) => {
             this.$message({

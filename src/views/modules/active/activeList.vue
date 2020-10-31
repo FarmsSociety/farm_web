@@ -8,6 +8,7 @@
                @search-change="searchChange"
                @on-load="getDataList"
                @refresh-change="refreshChange">
+               
       <template slot-scope="scope"
                 slot="preacherIdentity">
         <el-tag v-if="scope.row.preacherIdentity === 0"
@@ -89,9 +90,9 @@ export default {
       },
       dataListLoading: false,
       tableOption: tableOption,
-      permission: {
-        delBtn: this.isAuth('shop:notice:delete')
-      },
+      // permission: {
+      //   delBtn: this.isAuth('shop:notice:delete')
+      // },
       addOrUpdateVisible: false
     }
   },
@@ -106,7 +107,7 @@ export default {
     getDataList (page, params) {
       this.dataListLoading = true
       this.$http({
-        url: this.$http.adornUrl('/active/list'),
+        url: this.$http.adornUrl('/science/activity/list'),
         method: 'get',
         params: this.$http.adornParams(Object.assign({
           current: page == null ? this.page.currentPage : page.currentPage,
@@ -134,7 +135,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$http({
-          url: this.$http.adornUrl('/shop/notice/' + id),
+          url: this.$http.adornUrl('/science/activity/delete?id=' + id),
           method: 'delete',
           data: this.$http.adornData({})
         }).then(({ data }) => {

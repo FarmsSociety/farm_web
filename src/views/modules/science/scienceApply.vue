@@ -10,20 +10,21 @@
                @refresh-change="refreshChange">
 
       <template slot-scope="scope"
-                slot="status">
-        <el-tag v-if="scope.row.status === 0"
-                size="small"
-                type="danger">撤销</el-tag>
+                slot="sex">
+        <el-tag v-if="scope.row.sex === 1"
+                size="small">男</el-tag>
         <el-tag v-else
-                size="small">公布</el-tag>
+                size="small">女</el-tag>
       </template>
       <template slot-scope="scope"
-                slot="isTop">
-        <el-tag v-if="scope.row.isTop === 0"
-                size="small">否</el-tag>
+                slot="signStatus">
+        <el-tag v-if="scope.row.signStatus === 0"
+                size="small">待审核</el-tag>
+        <el-tag v-else-if="scope.row.signStatus === 1"
+                size="small">未通过</el-tag>
         <el-tag v-else
-                size="small">是</el-tag>
-      </template>
+                size="small">已通过</el-tag>
+      </template> 
       <template slot="menuLeft">
 
         <el-button v-if="isAuth('shop:notice:save')"
@@ -54,8 +55,8 @@
 </template>
 
 <script>
-import { tableOption } from '@/crud/shop/notice'
-import AddOrUpdate from './active-add-or-update'
+import { tableOption } from '@/crud/science/apply'
+import AddOrUpdate from './apply-add-or-update'
 export default {
   data () {
     return {
@@ -67,9 +68,9 @@ export default {
       },
       dataListLoading: false,
       tableOption: tableOption,
-      permission: {
-        delBtn: this.isAuth('shop:notice:delete')
-      },
+      // permission: {
+      //   delBtn: this.isAuth('shop:notice:delete')
+      // },
       addOrUpdateVisible: false
     }
   },
@@ -84,15 +85,15 @@ export default {
     getDataList (page, params) {
       this.dataListLoading = true
       this.$http({
-        url: this.$http.adornUrl('/shop/notice/page'),
+        url: this.$http.adornUrl('/science/service/getSignUpScienceList'),
         method: 'get',
         params: this.$http.adornParams(Object.assign({
           current: page == null ? this.page.currentPage : page.currentPage,
           size: page == null ? this.page.pageSize : page.pageSize
         }, params))
       }).then(({ data }) => {
-        this.dataList = data.records
-        this.page.total = data.total
+        this.dataList = data.data.records
+        this.page.total = data.data.total
         this.dataListLoading = false
       })
     },
@@ -110,7 +111,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$http({
-          url: this.$http.adornUrl('/shop/notice/' + id),
+          url: this.$http.adornUrl('/science/service/delete?id=' + id),
           method: 'delete',
           data: this.$http.adornData({})
         }).then(({ data }) => {

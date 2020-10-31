@@ -55,7 +55,7 @@
 
 <script>
 import { tableOption } from '@/crud/shop/notice'
-import AddOrUpdate from './active-add-or-update'
+import AddOrUpdate from './commen-add-or-update'
 export default {
   data () {
     return {

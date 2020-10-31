@@ -67,9 +67,9 @@ export default {
       },
       dataListLoading: false,
       tableOption: tableOption,
-      permission: {
-        delBtn: this.isAuth('shop:notice:delete')
-      },
+      // permission: {
+      //   delBtn: this.isAuth('shop:notice:delete')
+      // },
       addOrUpdateVisible: false
     }
   },

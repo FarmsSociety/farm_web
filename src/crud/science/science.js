@@ -90,24 +90,8 @@ export const tableOption = {
       ]
     },
     {
-      label: '活动类型',
-      prop: 'activityType',
-      slot: true,
-      type: 'select',
-      search: true,
-      dicData: [
-        {
-          label: '科技服务',
-          value: 0
-        }, {
-          label: '招募活动',
-          value: 1
-        }
-      ]
-    },
-    {
       label: '活动状态',
-      prop: 'activityStatus',
+      prop: 'serviceStatus',
       slot: true,
       type: 'select',
       dicData: [
